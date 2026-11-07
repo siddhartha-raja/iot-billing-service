@@ -1,0 +1,51 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: iot-billing-service
+  datasource:
+    url: jdbc:h2:mem:billingdb
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: iot-billing-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+
+app:
+  kafka:
+    topics:
+      # produced
+      subscription-created: iot.billing.subscription-created
+      subscription-terminated: iot.billing.subscription-terminated
+      invoice-generated: iot.billing.invoice-generated
+
+billing:
+  invoice:
+    cron: "0 0 2 1 * *"
+
+clients:
+  order:
+    base-url: http://localhost:8081
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true

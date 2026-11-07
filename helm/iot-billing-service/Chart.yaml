@@ -1,0 +1,6 @@
+apiVersion: v2
+name: iot-billing-service
+description: Rate plans, subscriptions, usage and invoicing
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
